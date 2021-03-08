@@ -30,4 +30,6 @@ This scripts needs the following componets
 
 ### How to Use
 Just run it in your terminal or schedule it with crontab:
-`bash /path/log-clear.sh /path/log-cleaner.json`
+~~~
+bash /path/log-clear.sh /path/log-cleaner.json
+~~~
