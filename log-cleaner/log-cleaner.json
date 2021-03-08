@@ -1,0 +1,13 @@
+{
+    "config":{
+        "NewLines": 100,
+        "LimitLines": 1000,
+        "SendMessage": "/path/telegram-message.sh",
+        "SendFile": "/path/telegram-message-file.sh"
+    },
+    "repository": [
+        "/borg/repository/dir/1",
+        "/borg/repository/dir/2",
+        "/borg/repository/dir/3"
+    ]
+}
