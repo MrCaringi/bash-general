@@ -8,6 +8,7 @@ I create this for clean some logs non located in /var/log directories.
 This scripts needs the following componets
 - the .sh script it self
 - the .json configuration file
+- the "jq - Command-line JSON processor" package, just run in the terminal: `sudo apt install -y jq`
 - the "SendMessage" script for telegram notifications, it can be found here [Git Repository for Telegram Scripts](https://github.com/MrCaringi/notifications)
 - the "SendFile" script for telegram notifications, it can be found here [Git Repository for Telegram Scripts](https://github.com/MrCaringi/notifications)
 

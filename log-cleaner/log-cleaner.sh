@@ -11,65 +11,39 @@
 # 
 #	Modification Log
 #		2020-03-07  Alpha version
-#
+#       2020-03-08  Beta version
 #
 ###############################
 
 ##      Getting the Configuration
-    PASSPHRASE=`cat $1 | jq --raw-output '.config.Password'`
+    NEWLINES=`cat $1 | jq --raw-output '.config.NewLines'`
+    LIMITLINES=`cat $1 | jq --raw-output '.config.LimitLines'`
     SEND_MESSAGE=`cat $1 | jq --raw-output '.config.SendMessage'`
     SEND_FILE=`cat $1 | jq --raw-output '.config.SendFile'`
-
-echo "=============================================================================="
-
-#   Repository loop
+#   Getting number of files
+    N=`jq '.repository | length ' $1`
+    i=0
+#   File loop
     while [ $i -lt $N ]
     do
-
-        echo "================================================"
-        REPO=`cat $1 | jq --raw-output ".repository[$i]"`
-        echo $(date +%Y%m%d-%H%M)" Starting Check of $REPO"
+        echo "==========================================================="
+        FILE=`cat $1 | jq --raw-output ".repository[$i]"`
+        echo $(date +%Y%m%d-%H%M)" Starting Check of $FILE"
         START=$(date +"%Y%m%d %HH%MM%SS")
-        bash $SEND_MESSAGE "Borg Check" "Repo: #${REPO}" "Starting Check of repository" > /dev/null
         
-            #   For Debug purposes
-            echo "REPO:"$REPO
-            #echo "SEND_MESSAGE:"$SEND_MESSAGE
-            #echo "PASSPHRASE:"$PASSPHRASE
-            echo "N="$N
-            echo "i="$i
+                
+        file_check=$(wc -l $FILE | cut -d ' ' -f 1)
+        #   wc -w $FILE | cut -d ' ' -f 1
+        #   wc -l < $FILE
         
-        #   The Magic goes here
-        log_check=`borg check -v --verify-data --show-rc $REPO 2>&1`
-        exit=$?
-
-        if [ ${exit} -eq 0 ]; then
-            info "Check of ${REPO} finished successfully"
-            echo $(date +%Y%m%d-%H%M)" Check of ${REPO} finished successfully"
-            bash $SEND_MESSAGE "Borg Check" "Repo: #${REPO}" "Check finished #successfully" > /dev/null
-        else
-            info "Check of ${REPO} finished with errors"
-            echo $(date +%Y%m%d-%H%M)" Check of ${REPO} finished with errors"
-            bash $SEND_MESSAGE "Borg Check" "Repo: #${REPO}" "Check finished with #errors" > /dev/null
+        if [ $file_check -gt $LIMITLINES ]; then
+            echo $(date +%Y%m%d-%H%M)" $FILE has more than $LIMITLINES Lines (actual lines: $file_check)"
+            SEEK=$(($file_check - $NEWLINES))
+            tail -n +$SEEK $FILE > $FILE.tmp && mv $FILE.tmp $FILE
+            echo $(date +%Y%m%d-%H%M)" $FILE has been truncated to kept last $NEWLINES lines"
+            bash $SEND_FILE "Log Cleaner" "this file had $file_check lines" $FILE > /dev/null 2>&1
         fi
-
-        ##  Sending log to Telegram
-        #   Building the log file
-            rand=$((1000 + RANDOM % 8500))
-            echo "========== BORG CHECK          $START" >> borg-log_${rand}.log
-            echo "$log_check" >> borg-log_${rand}.log
-            echo >> borg-log_${rand}.log
-            echo "========== END           $(date +"%Y%m%d %HH%MM%SS")" >> borg-log_${rand}.log
-            #   Sending the File to Telegram
-            bash $SEND_FILE "Repo: #${REPO}" "Borg Check Log File" borg-log_${rand}.log > /dev/null
-            #   Flushing & Deleting the file
-            cat borg-log_${rand}.log
-            rm borg-log_${rand}.log
-
         i=$(($i + 1))
+        echo "i="$i
     done
-    
 exit 0
-
-
-tail -n +2 "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
