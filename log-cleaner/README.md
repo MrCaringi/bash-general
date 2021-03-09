@@ -22,9 +22,9 @@ This scripts needs the following componets
         "SendFile": "/path/telegram-message-file.sh"    # path and script where the "Send Telegram File" script exist
     },
     "repository": [    # list of files to be monitoring
-        "/borg/repository/dir/1",
-        "/borg/repository/dir/2",
-        "/borg/repository/dir/3"
+        "/file/path/1",
+        "/file/path/2",
+        "/file/path/3"
     ]
 }
 ~~~
