@@ -33,7 +33,7 @@
         
                 
         file_check=$(wc -l $FILE | cut -d ' ' -f 1)
-        #   wc -w $FILE | cut -d ' ' -f 1
+        #   wc -l $FILE | cut -d ' ' -f 1
         #   wc -l < $FILE
         
         if [ $file_check -gt $LIMITLINES ]; then
