@@ -1,0 +1,117 @@
+version: "2.1"
+services:
+#   Torrent
+    transmission:
+        image: ghcr.io/linuxserver/transmission
+        container_name: transmission
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/Monterrey
+        - TRANSMISSION_WEB_HOME=/combustion-release/
+        - USER=admin
+        - PASS=123456
+        volumes:
+        - /home/jfc/docker/transmission:/config
+        - /mnt/nostromo-video:/downloads/video
+        - /mnt/nostromo-repository:/downloads/repository
+        - /mnt/nostromo-downloads:/downloads/downloads
+        - /mnt/music:/downloads/music
+        - /home/jfc/sync/watch-folder:/watch
+        ports:
+        - 8013:9091
+        - 51413:51413
+        - 51413:51413/udp
+        restart: unless-stopped
+#   Trackers
+    jackett:
+        image: ghcr.io/linuxserver/jackett
+        container_name: jackett
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/Monterrey
+            - AUTO_UPDATE=true
+        volumes:
+            - /home/jfc/docker/jackett:/config
+            - /mnt/nostromo-video:/downloads/video
+            - /mnt/nostromo-repository:/downloads/repository
+            - /mnt/nostromo-downloads:/downloads/downloads
+            - /mnt/music:/downloads/music
+        ports:
+            - 8014:9117
+        restart: unless-stopped   
+#   Series    
+    sonarr:
+        image: ghcr.io/linuxserver/sonarr
+        container_name: sonarr
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/Monterrey
+        volumes:
+            - /home/jfc/docker/sonarr:/config
+            - /mnt/nostromo-video:/downloads/video
+            - /mnt/nostromo-repository:/downloads/repository
+            - /mnt/nostromo-downloads:/downloads/downloads
+        ports:
+            - 8015:8989
+        restart: unless-stopped
+#   Moviers
+    radarr:
+        image: ghcr.io/linuxserver/radarr
+        container_name: radarr
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/Monterrey
+        volumes:
+            - /home/jfc/docker/radarr:/config
+            - /mnt/nostromo-video:/downloads/video
+            - /mnt/nostromo-repository:/downloads/repository
+            - /mnt/nostromo-downloads:/downloads/downloads
+        ports:
+            - 8016:7878
+        restart: unless-stopped
+#   Substitles
+    bazarr:
+        image: ghcr.io/linuxserver/bazarr
+        container_name: bazarr
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/Monterrey
+        volumes:
+        - /path/to/bazarr/config:/config
+        - /path/to/movies:/movies #optional
+        - /path/to/tv:/tv #optional
+        ports:
+        - 8017:6767
+        restart: unless-stopped
+#   Music
+    lidarr:
+        image: ghcr.io/linuxserver/lidarr
+        container_name: lidarr
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/Monterrey
+        volumes:
+        - /home/jfc/docker/lidarr:/config
+        - /mnt/nostromo-downloads:/downloads/downloads
+        - /mnt/music:/downloads/music
+        ports:
+        - 8018:8686
+        restart: unless-stopped
