@@ -14,6 +14,6 @@
         {
             "Pattern": "*f1*",
             "From": "/path-downloads/complete/",
-            "To": "path-video/Racing/F1/"
+            "To": "/path-video/Racing/F1/"
         }   ]
 }
