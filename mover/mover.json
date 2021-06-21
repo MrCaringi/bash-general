@@ -1,0 +1,19 @@
+{
+    "config":{
+        "Debug": 0,
+        "Sleep": 5,
+        "SendMessage": "/path/telegram-message.sh",
+        "SendFile": "/path/telegram-message-file.sh"
+        },
+    "folders": [
+        {
+            "Pattern": "*motogp*",
+            "From": "/path-downloads/complete/",
+            "To": "/path-video/Racing/MotoGP/"
+        },
+        {
+            "Pattern": "*f1*",
+            "From": "/path-downloads/complete/",
+            "To": "path-video/Racing/F1/"
+        }   ]
+}
