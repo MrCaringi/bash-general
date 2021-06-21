@@ -1,5 +1,5 @@
 ###############################
-#       MOVER Script v1     (Tú agente de mudanzas!)
+#       MOVER Script v1.1     (Tú agente de mudanzas!)
 #
 #	sh mover.sh /path/to/mover.json
 #
@@ -12,7 +12,6 @@
 #
 ###############################
 
-#   Manual example_
 #   find /mnt/nostromo-downloads/complete/ -iname "*motogp*" -exec mv {} /mnt/nostromo-video/Racing/MotoGP/ \;
 
 ##      Getting the Configuration
@@ -67,7 +66,7 @@
                 echo $(date +%Y%m%d-%H%M%S)" MOVER, found a coincidence for pattern: ${Pattern}"
                 echo "========== END           $(date +"%Y%m%d %HH%MM%SS")" >> mover-log_${rand}.log
                 #   Sending the File to Telegram
-                bash $SEND_FILE "MOVER" "found a coincidence for pattern:$LABEL" mover-log_${rand}.log >/dev/null 2>&1
+                bash $SEND_FILE "MOVER" "found a coincidence for pattern: ${LABEL}" mover-log_${rand}.log >/dev/null 2>&1
             fi    
             
                 
