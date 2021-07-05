@@ -1,25 +1,15 @@
 {
     "config":{
-        "Debug": 1,
-        "SendMessage": "/path/telegram-message.sh",
-        "SendFile": "/path/telegram-message-file.sh"
+        "Debug": 0,
+        "SendMessage": "/home/jfc/scripts/telegram-message.sh",
+        "SendFile": "/home/jfc/scripts/telegram-message-file.sh",
+        "Setting": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
         },
     "folders": [
         {
             "Label": "Music Video Playlist",
             "From": "https://www.youtube.com/playlist?list=PL9E04FD2B3AE0C179",
             "To": "/mnt/nostromo-video/video-music/%(title)s.%(ext)s"
-        },
-        {
-            "Label": "Music Video Playlist",
-            "From": "https://www.youtube.com/playlist?list=PLYLkYismYFYmQTKflZiFH39daHqOUZe8K",
-            "To": "/mnt/nostromo-video/video-music/%(title)s.%(ext)s"
-        },
-        {
-            "Label": "Cooking Playlist",
-            "From": "https://www.youtube.com/playlist?list=PLYLkYismYFYlAY7ZMLo8vU3tESOXRa1xN",
-            "To": "/mnt/nostromo-video/cooking/%(title)s.%(ext)s"
         }
-
     ]
 }
