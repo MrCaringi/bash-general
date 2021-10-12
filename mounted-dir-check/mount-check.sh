@@ -139,6 +139,8 @@
 				sudo mount $DIR
 				if [ $? -ne 0 ]; then
 					[ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#MOUNTED_DIR_CHECK" "Task: ${I} / ${N}" "ERROR trying to mount:" "${DIR}" >/dev/null 2>&1
+                    else
+                        echo $(date +%Y%m%d-%H%M%S)" $DIR Was Mounted Successfully."
 				fi
 			fi
 		sleep ${WAIT}
@@ -148,7 +150,7 @@
 ##   The end
     echo "================================================"
     echo $(date +%Y%m%d-%H%M%S)"	MOUNTED DIR CHECK Finished Task: ${I} of ${N}"
-
+ 
     echo "################################################"
     echo "#                                              #"
     echo "#       FINISHED MOUNTED DIR CHECK             #"
