@@ -1,0 +1,17 @@
+{
+    "GeneralConfig":{
+        "Debug": true,
+        "Wait": 2
+        },
+    "Telegram":{
+        "Enable": true,
+        "ChatID": "-123",
+        "APIkey": "123:ABC"
+        },
+
+    "Folders": [
+        "/local/mounted/dir/1",
+        "/local/mounted/dir/2",
+        "/local/mounted/dir/3"
+    ]
+}
