@@ -1,7 +1,7 @@
 # DOCKER Mount-point Check Monitor
 Bash Script for verifying and self-healing unmounted mount-points in docker containers
 
-## What does this Script do:
+## What does this Script Do?:
 - Verify if the mount-point exist INSIDE the docker container,
 - If the mount-point does not exist, then a Telegram message is sent (if parameter Telegram.Enable is set "true"),
 - Then, the docker container is restarted (as a workaround),
