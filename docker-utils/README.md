@@ -1,4 +1,4 @@
-# DOCKER Mount-point Check Script
+# DOCKER Mount-point Check Monitor
 Bash Script for verifying and self-healing unmounted mount-points in docker containers
 
 ## What does this Script do:
