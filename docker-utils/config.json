@@ -1,0 +1,28 @@
+{
+    "GeneralConfig":{
+        "Debug": true,
+        "Wait": 2
+        },
+    "Telegram":{
+        "Enable": true,
+        "ChatID": "-123",
+        "APIkey": "123:ABC"
+        },
+
+    "Task": [
+        {
+            "ContainerName": "name or ID of the docker container",
+            "MountPoints":[
+                "/path/to/check-1",
+                "/path/to/check-2",
+                "/path/to/check-3"
+            ]
+        },
+        {
+            "ContainerName": "name or ID of the docker container 2",
+            "MountPoints":[
+                "/path/to/check"
+            ]
+        },
+    ]
+}
