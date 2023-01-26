@@ -1,7 +1,7 @@
 {
     "GeneralConfig":{
         "Debug": true,
-        "Wait": 2
+        "Wait": 5
         },
     "Telegram":{
         "Enable": true,
@@ -9,7 +9,7 @@
         "APIkey": "123:ABC"
         },
 
-    "Task": [
+    "Tasks": [
         {
             "ContainerName": "name or ID of the docker container",
             "MountPoints":[
@@ -23,6 +23,6 @@
             "MountPoints":[
                 "/path/to/check"
             ]
-        },
+        }
     ]
 }

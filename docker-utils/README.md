@@ -1,19 +1,26 @@
-# Mounted Directory Check Script
-Bash Script for verifying and self-healed unmounted directories
+# DOCKER Mountpoint Check Script
+Bash Script for verifying and self-healed unmounted mounpoints in docker containers
 
 ##   BEWARE!
-`sudo mount` is used in order to try to mount the directory, so, current user needs to able to use `sudo` without password.
+`This script assumes that the user of this script can run "docker" without sudo`
 
+# How to update the script
+## In the terminal:
+```
+wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/Backups-and-Replication/master/rclone/rclone_sync/rclone_sync.sh && chmod +x rclone_sync.sh
+```
 ## How to Use
 Open your terminal, then run
 ```
-bash /path/mount-check.sh /path/config.json
+bash docker-mount-check.sh config.json
 ```
+![Terminal Start](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-start.png)
 
 ### Parameters
 1 .json file
 
 ### Packages requirement
+- `docker`    Container technology used
 - `jq`    Package for json data parsing
 
 ##  How to fill the config file (.json)
@@ -22,7 +29,7 @@ Example
 {
     "GeneralConfig":{
         "Debug": true,
-        "Wait": 2
+        "Wait": 5
         },
     "Telegram":{
         "Enable": true,
@@ -30,23 +37,49 @@ Example
         "APIkey": "123:ABC"
         },
 
-    "Folders": [
-        "/local/mounted/dir/1",
-        "/local/mounted/dir/2",
-        "/local/mounted/dir/3"
+    "Tasks": [
+        {
+            "ContainerName": "name or ID of the docker container",
+            "MountPoints":[
+                "/path/to/check-1",
+                "/path/to/check-2",
+                "/path/to/check-3"
+            ]
+        },
+        {
+            "ContainerName": "name or ID of the docker container 2",
+            "MountPoints":[
+                "/path/to/check"
+            ]
+        }
     ]
 }
 ```
 ### .json Instructions
 | Parameter | Value | Description |
 |---------------------- | -----------| ---------------------------------|
-| GeneralConfig.Debug | true / false | Enable more verbosity in the program log |
-| GeneralConfig.Wait | number | Seconds to wait between task |
+| GeneralConfig.Debug | true / false | Enable verbosity in the program log (recomended)|
+| GeneralConfig.Wait | number | Seconds to wait between task (5 seconds recomended)|
 | Telegram.Enable | true / false | Enable Telegram Notifications |
 | Telegram.ChatID | number | Enable Telegram Notifications (you can get this when you add the bot @getmyid_bot to your chat/group) |
 | Telegram.APIkey | alphanumeric | Telegram Bot API Key |
-| Folders | Path | Full path to Directory |
+| Tasks.ContainerName | alphanumeric | name or ID of the docker container |
+| Tasks.MountPoints | array/alphanumeric | Array of Full path to Directory |
 
-##  Version Story
--       2020-09-01  First version
--		2021-10-12	v1.0.0 refactor
+### How to determine which MountPoints can be monitored
+You can run teh following command in order to know which mount points are the container using:
+`docker exec <container name> cat /proc/mounts`
+![Terminal Mountpoints](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-mountpoints.png)
+
+## Logs and Notifications
+Script Output example, when everything goes OK
+![Terminal Output OK](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-output-ok.jpg)
+
+Script Output example, when there is a mountpount irrecoverable
+![Terminal Output ERROR](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-output-error.jpg)
+
+Telegram Notification Example
+![Telegram Notification](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/telegram-messages.jpg)
+
+##  Version History
+-       2023-01-26  v1.0.0  First version

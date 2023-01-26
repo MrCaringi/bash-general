@@ -45,13 +45,13 @@
 
 ##      Getting the Main Configuration
     #   General Config
-    DEBUG=$(cat $1 | jq --raw-output '.GeneralConfig.Debug')
-    WAIT=$(cat $1 | jq --raw-output '.GeneralConfig.Wait')
+    DEBUG=$(cat $1 | jq --raw-output ".GeneralConfig.Debug")
+    WAIT=$(cat $1 | jq --raw-output ".GeneralConfig.Wait")
     
     #   Telegram Config
-    ENABLE_MESSAGE=$(cat $1 | jq --raw-output '.Telegram.Enable')
-    CHAT_ID=$(cat $1 | jq --raw-output '.Telegram.ChatID')
-    API_KEY=$(cat $1 | jq --raw-output '.Telegram.APIkey')
+    ENABLE_MESSAGE=$(cat $1 | jq --raw-output ".Telegram.Enable")
+    CHAT_ID=$(cat $1 | jq --raw-output ".Telegram.ChatID")
+    API_KEY=$(cat $1 | jq --raw-output ".Telegram.APIkey")
 
 ##  Functions
     function TelegramSendMessage(){
@@ -94,7 +94,7 @@
 ##   Start
     echo "################################################"
     echo "#                                              #"
-    echo "#       STARTING DOCKER MOUNT CHECK             #"
+    echo "#       STARTING DOCKER MOUNT CHECK            #"
     echo "#                 ${VERSION}                       #"
     echo "#                                              #"
     echo "################################################"
@@ -102,9 +102,15 @@
     #   General Start time
         TIME_START=$(date +%s)
         DATE_START=$(date +%F)
+
     #   Setting Loop variables
-        N=$(jq '.Tasks | length ' $1)
-        i=0
+        N=$(jq ".Tasks | length " $1)
+        i=0     #   Main loop counter
+        j=0     #   Inner loop counter
+        I=0     #   Task counter
+        J=0     #   Inner task counter
+        M=0     #   Inner mountpoint Qty
+
 	#   For Debug purposes
         [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	DEBUG: "$DEBUG
         [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	WAIT: "$WAIT
@@ -112,56 +118,100 @@
         [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	CHAT_ID: "$CHAT_ID
         [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	API_KEY: "$API_KEY
         [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	Task Qty: "$N
-        [ $DEBUG == true ] && echo "================================================"
-
-
+        [ $DEBUG == true ] && echo "════════════════════════════════════════════════════════════════════════════════════════════════"
 
 #   Entering into the Loop
 
-#	Main section
+#	Main loop
     while [ $i -lt $N ]
     do
+        [ $DEBUG == true ] && echo "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄"
+        
         #   Intitializing inner loop variables
             j=0
-            M=$(jq '.Tasks[$i].MountPoints | length ' $1)
-
-            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	j: "$j
-            echo $(date +%Y%m%d-%H%M%S)" Number of mountpoints to check: "$M
-            
-
-
-
-        echo "================================================"
-        CONTAINER=$(cat $1 | jq --raw-output ".Task[$i].ContainerName")
+            M=$(jq ".Tasks[$i].MountPoints | length " $1)
         
-
-        DIR=$(cat $1 | jq --raw-output ".Folders[$i]")
-		I=$((i+1))
-        echo $(date +%Y%m%d-%H%M%S)" Verifiying if $DIR is mounted"
+        #   Task Info
+            I=$((i+1))
+            ContainerName=$(jq --raw-output ".Tasks[$i].ContainerName " $1)
+            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Task Counter: "$I
+            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Task Container Name: "$ContainerName
+            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Task Number of mountpoints to check: "$M
         
+        #   Inner lopp
+            while [ $j -lt $M ]
+            do
+                [ $DEBUG == true ] && echo "------------------------------------------------------------------------------------------------"
+                #   Inner loop info
+                    k=0
+                    J=$((j+1))
+                    [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)"	Inner task counter, J: $J / $M"
+                    MountPoint=$(jq --raw-output ".Tasks[$i].MountPoints[$j] " $1)
+                    [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Task Container Mount-Point: "$MountPoint
+                
+                #   Magic goes here!
+                    #	Verifying if folder is mounted
+                        [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Verifying if folder is mounted"
+                        [ $DEBUG == true ] && echo
+                        if docker exec -it $ContainerName grep $MountPoint /proc/mounts; then
+                            #	Ok, it is mounted
+                            [ $DEBUG == true ] && echo
+                            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" *** OK ***: for container $ContainerName, the mount-point $MountPoint is Present."
+                        else
+                            #	ERROR, it is NOT mounted
+                            [ $DEBUG == true ] && echo
+                            [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" *** ERROR ***: for container $ContainerName, the mount-point $MountPoint is MISSING."
+                            [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point missing (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
 
-		#	Verifying if folder is mounted
-        #   docker exec -it jdownloader grep nostromo.local.lan:/volume4/hdd_cache/torrents /proc/mounts
-			if grep -qs $DIR /proc/mounts; then
-				echo $(date +%Y%m%d-%H%M%S)" $DIR is Mounted."
-			else
-				echo $(date +%Y%m%d-%H%M%S)" $DIR is not Mounted."
-				sudo mount $DIR
-				if [ $? -ne 0 ]; then
-					[ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#MOUNTED_DIR_CHECK" "Task: ${I} / ${N}" "ERROR trying to mount:" "${DIR}" >/dev/null 2>&1
-				fi
-			fi
-		sleep ${WAIT}
-    	i=$(($i + 1))
+                            #   Restarting the container
+                                [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Container $ContainerName, is being restarted"
+                                docker restart $ContainerName > /dev/null
+                                [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Container $ContainerName, has been restarted"
+
+                            #   Waiting and verifying loop
+                                MISSING="false"
+                                while [ $k -lt 5 ]
+                                do
+                                    #   Verify if container is running
+                                        sleep ${WAIT}
+                                        STATUS=$( docker container inspect -f '{{.State.Status}}' $ContainerName )
+                                        [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Container $ContainerName, has the State.Status: "$STATUS
+                                        if [ $STATUS == "running" ]; then
+                                            sleep ${WAIT}
+                                            # Verify if mount point is present
+                                                if docker exec -it $ContainerName grep $MountPoint /proc/mounts; then
+                                                    echo $(date +%Y%m%d-%H%M%S)" *** OK ***: for container $ContainerName, the mount-point $MountPoint is NOW AVAILABLE."
+                                                    [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was fixed! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
+                                                    break
+                                                else
+                                                    echo $(date +%Y%m%d-%H%M%S)" *** WARNING ***: for container $ContainerName, the mount-point $MountPoint is MISSING."
+                                                    MISSING="true"
+                                                fi
+                                        fi
+                                    k=$(($k + 1))
+                                    [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Waiting and verifying counter, k: "$k
+                                done
+                                #   unrecovery notification
+                                    [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" MISSING value: "$MISSING
+                                    if [ $MISSING == true ]; then
+                                        echo $(date +%Y%m%d-%H%M%S)" *** ERROR ***: for container $ContainerName, the mount-point $MountPoint was IRRECOVERABLE."
+                                        [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was #IRRECOVERABLE! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
+                                    fi
+                        fi
+                #   Finishing inner loop
+                    #sleep ${WAIT}
+                    j=$(($j + 1))
+            done
+        i=$(($i + 1))
     done
 
 ##   The end
-    echo "================================================"
+    [ $DEBUG == true ] && echo "════════════════════════════════════════════════════════════════════════════════════════════════"
     echo $(date +%Y%m%d-%H%M%S)"	MOUNTED DIR CHECK Finished Task: ${I} of ${N}"
 
     echo "################################################"
     echo "#                                              #"
-    echo "#       FINISHED MOUNTED DIR CHECK             #"
+    echo "#        FINISH DOCKER MOUNT CHECK             #"
     echo "#                 ${VERSION}                       #"
     echo "#                                              #"
     echo "################################################"
