@@ -3,10 +3,10 @@ Bash Script for verifying and self-healed unmounted mounpoints in docker contain
 
 ## What does this Script do:
 - Verify if the mountpoint exist INSIDE the docker container,
-- If the mountpoint does not exist, then notify it via telegram (if enabled),
-- Then, the docker container is restarted,
-- After the document got restarted, verify (up to 5 times) if the mountpoint is available, if not:
-- If not, then another Telegram Message is sent to notify it.
+- If the mountpoint does not exist, then a Telegram message is sent (if paraemter Telegram.Enable is set "true"),
+- Then, the docker container is restarted (as a workaround),
+- After the Container got restarted, this script verify (up to 5 times) if the mountpoint is available,
+- If not, then, another Telegram Message is sent to notify it.
 ##   BEWARE!
 `This script assumes that the user of this script can run "docker" without sudo`
 
