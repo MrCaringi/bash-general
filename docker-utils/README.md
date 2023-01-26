@@ -1,16 +1,22 @@
 # DOCKER Mountpoint Check Script
 Bash Script for verifying and self-healed unmounted mounpoints in docker containers
 
+## What does this Script do:
+- Verify if the mountpoint exist INSIDE the docker container,
+- If the mountpoint does not exist, then notify it via telegram (if enabled),
+- Then, the docker container is restarted,
+- After the document got restarted, verify (up to 5 times) if the mountpoint is available, if not:
+- If not, then another Telegram Message is sent to notify it.
 ##   BEWARE!
 `This script assumes that the user of this script can run "docker" without sudo`
 
-# How to update the script to the lastest (stable) version
-## In the terminal:
+## How to update the script to the lastest (stable) version
+Type in the terminal:
 ```
 wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/bash-general/docker-mount-check_v1.0.0/docker-utils/docker-mount-check.sh && chmod +x docker-mount-check.sh
 ```
 ## How to Use
-Open your terminal, then run
+Open your terminal, then run:
 ```
 bash docker-mount-check.sh config.json
 ```
@@ -65,7 +71,7 @@ Example
 | Telegram.ChatID | number | Enable Telegram Notifications (you can get this when you add the bot @getmyid_bot to your chat/group) |
 | Telegram.APIkey | alphanumeric | Telegram Bot API Key |
 | Tasks.ContainerName | alphanumeric | name or ID of the docker container |
-| Tasks.MountPoints | array/alphanumeric | Array of Full path to Directory |
+| Tasks.MountPoints | array/alphanumeric | Array of Full path of mountpoints INSIDE THE CONTAINER! |
 
 ### How to determine which MountPoints can be monitored
 You can run teh following command in order to know which mount points are the container using:
