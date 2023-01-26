@@ -151,7 +151,7 @@
                 
                 #   Magic goes here!
                     #	Verifying if folder is mounted
-                        [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Verifying if folder is mounted"
+                        [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Verifying if folder is mounted "
                         [ $DEBUG == true ] && echo
                         if docker exec $ContainerName grep $MountPoint /proc/mounts; then
                             #	Ok, it is mounted
