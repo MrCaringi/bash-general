@@ -3,7 +3,8 @@
         "Debug": true,
         "Wait": 5
         },
-    "Telegram":{
+
+        "Telegram":{
         "Enable": true,
         "ChatID": "-123",
         "APIkey": "123:ABC"

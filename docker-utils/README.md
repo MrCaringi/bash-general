@@ -69,16 +69,20 @@ Example
 ### How to determine which MountPoints can be monitored
 You can run teh following command in order to know which mount points are the container using:
 `docker exec <container name> cat /proc/mounts`
+
 ![Terminal Mountpoints](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-mountpoints.png)
 
 ## Logs and Notifications
-Script Output example, when everything goes OK
+- Script Output example, when everything goes OK
+
 ![Terminal Output OK](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-output-ok.jpg)
 
-Script Output example, when there is a mountpount irrecoverable
+- Script Output example, when there is a mountpount irrecoverable
+
 ![Terminal Output ERROR](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-output-error.jpg)
 
-Telegram Notification Example
+- Telegram Notification Example
+
 ![Telegram Notification](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/telegram-messages.jpg)
 
 ##  Version History
