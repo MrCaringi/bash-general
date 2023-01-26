@@ -1,19 +1,20 @@
 # DOCKER Mountpoint Check Script
-Bash Script for verifying and self-healed unmounted mounpoints in docker containers
+Bash Script for verifying and self-healing unmounted mounpoints in docker containers
 
 ## What does this Script do:
 - Verify if the mountpoint exist INSIDE the docker container,
-- If the mountpoint does not exist, then a Telegram message is sent (if paraemter Telegram.Enable is set "true"),
+- If the mountpoint does not exist, then a Telegram message is sent (if parameter Telegram.Enable is set "true"),
 - Then, the docker container is restarted (as a workaround),
 - After the Container got restarted, this script verify (up to 5 times) if the mountpoint is available,
-- If not, then, another Telegram Message is sent to notify it.
+- If not, then, another Telegram message is sent to notify it.
 ##   BEWARE!
 `This script assumes that the user of this script can run "docker" without sudo`
 
-## How to update the script to the lastest (stable) version
+## How to update/download the script to the lastest (stable) version
 Type in the terminal:
 ```
-wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/bash-general/docker-mount-check_v1.0.0/docker-utils/docker-mount-check.sh && chmod +x docker-mount-check.sh
+wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/bash-general/master/docker-utils/docker-mount-check.sh && chmod +x docker-mount-check.sh
+
 ```
 ## How to Use
 Open your terminal, then run:
@@ -26,7 +27,7 @@ bash docker-mount-check.sh config.json
 1 .json file
 
 ### Packages requirement
-- `docker`    Container technology used
+- `docker`    Container technology
 - `jq`    Package for json data parsing
 
 ##  How to fill the config file (.json)
@@ -74,10 +75,11 @@ Example
 | Tasks.MountPoints | array/alphanumeric | Array of Full path of mountpoints INSIDE THE CONTAINER! |
 
 ### How to determine which MountPoints can be monitored
-You can run teh following command in order to know which mount points are the container using:
+You can run the following command in your terminal, in order to know which mount-points are available insider the container:
 ```
 docker exec <container name> cat /proc/mounts
 ```
+Example:
 
 ![Terminal Mountpoints](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-mountpoints.png)
 
