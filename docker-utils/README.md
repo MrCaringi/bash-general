@@ -4,10 +4,10 @@ Bash Script for verifying and self-healed unmounted mounpoints in docker contain
 ##   BEWARE!
 `This script assumes that the user of this script can run "docker" without sudo`
 
-# How to update the script
+# How to update the script to the lastest (stable) version
 ## In the terminal:
 ```
-wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/Backups-and-Replication/master/rclone/rclone_sync/rclone_sync.sh && chmod +x rclone_sync.sh
+wget -O docker-mount-check.sh https://raw.githubusercontent.com/MrCaringi/bash-general/docker-mount-check_v1.0.0/docker-utils/docker-mount-check.sh && chmod +x docker-mount-check.sh
 ```
 ## How to Use
 Open your terminal, then run
