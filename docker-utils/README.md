@@ -31,7 +31,8 @@ Example
         "Debug": true,
         "Wait": 5
         },
-    "Telegram":{
+
+        "Telegram":{
         "Enable": true,
         "ChatID": "-123",
         "APIkey": "123:ABC"
@@ -47,9 +48,9 @@ Example
             ]
         },
         {
-            "ContainerName": "name or ID of the docker container 2",
+            "ContainerName": "transmission",
             "MountPoints":[
-                "/path/to/check"
+                "10.0.0.10:/volume1/downloads/torrents"
             ]
         }
     ]
@@ -68,7 +69,9 @@ Example
 
 ### How to determine which MountPoints can be monitored
 You can run teh following command in order to know which mount points are the container using:
-`docker exec <container name> cat /proc/mounts`
+```
+docker exec <container name> cat /proc/mounts
+```
 
 ![Terminal Mountpoints](https://github.com/MrCaringi/assets/blob/main/images/scripts/docker-mounpoint-check/terminal-mountpoints.png)
 

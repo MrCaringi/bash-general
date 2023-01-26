@@ -20,9 +20,9 @@
             ]
         },
         {
-            "ContainerName": "name or ID of the docker container 2",
+            "ContainerName": "transmission",
             "MountPoints":[
-                "/path/to/check"
+                "10.0.0.10:/volume1/downloads/torrents"
             ]
         }
     ]
