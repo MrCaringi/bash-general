@@ -161,7 +161,7 @@
                             #	ERROR, it is NOT mounted
                             [ $DEBUG == true ] && echo
                             [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" *** ERROR ***: for container $ContainerName, the mount-point $MountPoint is MISSING."
-                            [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point missing (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
+                            [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_MONITOR" "Task: ${ContainerName} (${I} / ${N})" "Mount-point missing (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
 
                             #   Restarting the container
                                 [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" Container $ContainerName, is being restarted"
@@ -181,7 +181,7 @@
                                             # Verify if mount point is present
                                                 if docker exec -it $ContainerName grep $MountPoint /proc/mounts; then
                                                     echo $(date +%Y%m%d-%H%M%S)" *** OK ***: for container $ContainerName, the mount-point $MountPoint is NOW AVAILABLE."
-                                                    [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was fixed! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
+                                                    [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_MONITOR" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was fixed! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
                                                     break
                                                 else
                                                     echo $(date +%Y%m%d-%H%M%S)" *** WARNING ***: for container $ContainerName, the mount-point $MountPoint is MISSING."
@@ -195,7 +195,7 @@
                                     [ $DEBUG == true ] && echo $(date +%Y%m%d-%H%M%S)" MISSING value: "$MISSING
                                     if [ $MISSING == true ]; then
                                         echo $(date +%Y%m%d-%H%M%S)" *** ERROR ***: for container $ContainerName, the mount-point $MountPoint was IRRECOVERABLE."
-                                        [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_CHECK" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was #IRRECOVERABLE! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
+                                        [ $ENABLE_MESSAGE == true ] && TelegramSendMessage "#DOCKER_MOUNTPOINT_MONITOR" "Task: ${ContainerName} (${I} / ${N})" "Mount-point was #IRRECOVERABLE! (${J} / ${M}):" "${MountPoint}" >/dev/null 2>&1
                                     fi
                         fi
                 #   Finishing inner loop
