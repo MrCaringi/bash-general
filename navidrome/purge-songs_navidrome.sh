@@ -25,8 +25,9 @@
             fi
 
     #   Telegram VARS
-        CHAT_ID="9999999999"
-        API_KEY="999:ABCabc"
+        CHAT_ID="-999"
+        Message_Thread_Id="99"
+        API_KEY="1123:ABC"
 
 #   FUNCTIONS
     function TelegramSendMessage(){
@@ -48,6 +49,7 @@
         curl -s \
         --data parse_mode=HTML \
         --data chat_id=${CHAT_ID} \
+        --data message_thread_id=${Message_Thread_Id} \
         --data text="<b>${HEADER}</b>%0A      <i>from <b>#`hostname`</b></i>%0A%0A${LINE1}%0A${LINE2}%0A${LINE3}%0A${LINE4}%0A${LINE5}%0A${LINE6}%0A${LINE7}%0A${LINE8}%0A${LINE9}%0A${LINE10}%0A${LINE11}%0A${LINE12}" \
         "https://api.telegram.org/bot${API_KEY}/sendMessage"
     }
@@ -59,8 +61,9 @@
         FILE=${3}
         HOSTNAME=`hostname`
 
-        curl -v -4 -F \
-        "chat_id=${CHAT_ID}" \
+        curl -v -4 \
+        -F "chat_id=${CHAT_ID}" \
+        -F "message_thread_id=${Message_Thread_Id}" \
         -F document=@${FILE} \
         -F caption="${HEADER}"$'\n'"        from: #${HOSTNAME}"$'\n'"${LINE1}" \
         https://api.telegram.org/bot${API_KEY}/sendDocument
@@ -77,16 +80,28 @@ where ratings.rating = 1 and ratings.item_type = 'media_file';"
     #   Export the paths to file
         $SQLITE3_CMD "$DATABASE_FILE" <<< "$GET_SONGS_WITH_RATING_1" > $PATH_SONGS_FILE
 
-    #   Adjust the right path of files
-        sed -i "s|$PATH_PREFIX_2_replace|$PATH_PREFIX|g" $PATH_SONGS_FILE
+    # #   Mostrar archivo original
+        echo $(date +%Y%m%d-%H%M%S)" Original File"
         cat $PATH_SONGS_FILE
+
+    #   Adjust the right path of files
+        #sed -i "s|$PATH_PREFIX_2_replace|$PATH_PREFIX|g" $PATH_SONGS_FILE
+        #sed -i "s|^|$PATH_PREFIX/|" "$PATH_SONGS_FILE"
+
+        awk -v prefix="$PATH_PREFIX" '{print prefix "/" $0}' "$PATH_SONGS_FILE" > "$PATH_SONGS_FILE.tmp" && mv "$PATH_SONGS_FILE.tmp" "$PATH_SONGS_FILE"
+
+        echo $(date +%Y%m%d-%H%M%S)" AWK version"
+        cat $PATH_SONGS_FILE
+#    exit
 
 # Loop through songs and delete files
     echo $(date +%Y%m%d-%H%M%S)" Deleting songs with rating 1:"
 
     # Read the songs file line by line and delete them
         while IFS= read -r linea; do
-            # Verify if the path is valid
+            # # Verify if the path is valid
+            # stat "${linea}"
+            # exit
             if [ -e "$linea" ]; then
                 echo "Deleting file: $linea"
                 rm "$linea"
@@ -106,10 +121,10 @@ where ratings.rating = 1 and ratings.item_type = 'media_file';"
         find ${PATH_PREFIX} -type d ! -name '.*' -empty -print -delete > ${PATH_SONGS_FILE}
         TelegramSendFile "#MUSIC_PURGE" "Deleted folders" ${PATH_SONGS_FILE} >/dev/null 2>&1
 
+    #
+        TelegramSendMessage "#MUSIC_PURGE" " " "Recuerda borrar archivos faltantes!" "https://music.concari.net/app/#/missing"   
+
 #   Ending
     rm $PATH_SONGS_FILE
 
     echo $(date +%Y%m%d-%H%M%S)" Done."
-
-
-
